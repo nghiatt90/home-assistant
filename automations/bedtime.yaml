@@ -1,0 +1,49 @@
+alias: Bedtime Reminder
+description: Play bedtime reminder with optional phone charging warnings
+triggers:
+  - trigger: time
+    at: "22:25:00"
+    weekday:
+      - sat
+      - fri
+      - thu
+      - wed
+      - tue
+      - mon
+      - sun
+conditions: []
+actions:
+  - variables:
+      core_message: It's almost time to sleep.
+      yoshi_battery_level: "{{ states('sensor.yoshi_s_phone_battery_level')|int }}"
+      queen_battery_level: "{{ states('sensor.queen_s_phone_battery_level')|int }}"
+      yoshi_charging_state: "{{ states('sensor.yoshi_s_phone_battery_state') }}"
+      queen_charging_state: "{{ states('sensor.queen_s_phone_battery_state') }}"
+      yoshi_should_charge: >-
+        {{ yoshi_battery_level < 50 and yoshi_charging_state != 'full' and
+        yoshi_charging_state != 'charging' }}
+      queen_should_charge: >-
+        {{ queen_battery_level < 50 and queen_charging_state != 'full' and
+        queen_charging_state != 'charging' }}
+      battery_warnings: |-
+        {% if yoshi_should_charge and queen_should_charge %}
+          Yoshi and QP, you should charge your phones.
+        {% elif yoshi_should_charge %}
+          Yoshi, you should charge your phone
+        {% elif queen_should_charge %}
+          QP, you should charge your phone
+        {% else %}
+          ""
+        {% endif %}
+      final_message: >-
+        {{ core_message }} {% if battery_warnings %} {{ battery_warnings }} {%
+        endif %}
+  - action: tts.speak
+    metadata: {}
+    target:
+      entity_id: tts.home_assistant_cloud
+    data:
+      cache: true
+      media_player_entity_id: media_player.all_speakers
+      message: "{{ final_message }}"
+mode: single
