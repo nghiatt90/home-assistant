@@ -11,25 +11,23 @@ decluttering_templates:
             action: none
           double_tap_action:
             action: none
-        - type: custom:simple-weather-card
-          entity: weather.forecast_home
-          name: outside
-          backdrop:
-            fade: true
-            day: var(--primary-color)
-            night: '#1c1c1c'
-          primary_info:
-            - wind_speed
-            - humidity
-          secondary_info:
-            - precipitation
-            - precipitation_probability
-          tap_action:
-            action: none
+          card_mod:
+            style:
+              .: |
+                ha-card {
+                  height: 50px !important;
+                }
+              mushroom-state-info$: |
+                .container {
+                  --card-primary-font-size: 20px;
+                  --card-primary-line-height: 25px;
+                  --card-secondary-font-size: 20px;
+                  --card-secondary-line-height: 25px;
+                }
         - type: weather-forecast
           entity: weather.forecast_home
           forecast_type: daily
-          forecast_slots: 3
+          forecast_slots: 5
         - type: grid
           columns: 3
           square: true
@@ -44,6 +42,58 @@ decluttering_templates:
               entity: person.queen
               variables:
                 photo: /api/image/serve/c14c93894c5bd2d915c5c5e9bf6542f1/512x512
+  room_light:
+    variables:
+      - entity
+      - name
+    card:
+      type: custom:slider-button-card
+      entity: '[[entity]]'
+      name: '[[name]]'
+      allow_missing_entity: true
+      slider:
+        direction: left-right
+        background: gradient
+      action_button:
+        mode: toggle
+        show: true
+      tap_action:
+        action: none
+      hold_action:
+        action: more-info
+  room_climate:
+    variables:
+      - entity
+      - name
+      - hvac_modes
+    card:
+      type: custom:stack-in-card
+      mode: vertical
+      card_mod:
+        style: |
+          ha-card {
+            border: none;
+            box-shadow: none;
+            background: none;
+          }
+      cards:
+        - type: custom:mushroom-climate-card
+          entity: '[[entity]]'
+          name: '[[name]]'
+          icon: mdi:air-conditioner
+          show_temperature_control: true
+          collapsible_controls: true
+          hvac_modes:
+            - cool
+            - heat
+            - dry
+            - 'off'
+          card_mod:
+            style: |
+              ha-card {
+                border: none;
+                box-shadow: none;
+              }
 button_card_templates:
   person_card:
     show_name: false
@@ -74,15 +124,29 @@ views:
   - title: 1F
     path: first_floor
     icon: mdi:home-floor-1
-    badges: []
     type: sections
+    max_columns: 3
     sections:
       - type: grid
+        column_span: 1
         cards:
-          - type: custom:decluttering-card
-            template: common_sidebar
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none;
+                  box-shadow: none;
+                  background: none;
+                }
+            cards:
+              - type: custom:decluttering-card
+                template: common_sidebar
       - type: grid
+        column_span: 1
         cards:
+          - type: heading
+            heading: Entrance
           - type: picture-elements
             camera_image: camera.front_door_fluent
             camera_view: live
@@ -113,12 +177,54 @@ views:
                 style:
                   top: 25%
                   left: 96%
-                card_mod:
-                  style: |
-                    :host {
-                      --mdc-icon-size: 22px;
-                      color: {% if states('sensor.main_door_lock_battery')|int < 30 %}red{% else %}white{% endif %};
-                    }
+      - type: grid
+        column_span: 1
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:stack-in-card
+                mode: vertical
+                cards:
+                  - type: heading
+                    heading: Office 1
+                    heading_style: title
+                  - type: custom:decluttering-card
+                    template: room_light
+                    variables:
+                      - entity: light.office_light_1
+                      - name: Light
+                  - type: custom:decluttering-card
+                    template: room_climate
+                    variables:
+                      - entity: climate.office_ac_1
+                      - name: AC
+              - type: custom:stack-in-card
+                mode: vertical
+                cards:
+                  - type: heading
+                    heading: Guest Bedroom
+                    heading_style: title
+                  - type: custom:decluttering-card
+                    template: room_light
+                    variables:
+                      - entity: light.guest_bedroom_light
+                      - name: Light
+                  - type: custom:decluttering-card
+                    template: room_climate
+                    variables:
+                      - entity: climate.guest_bedroom_ac
+                      - name: AC
+              - type: custom:stack-in-card
+                mode: vertical
+                cards:
+                  - type: heading
+                    heading: Bathroom
+                    heading_style: title
+                  - type: custom:decluttering-card
+                    template: room_light
+                    variables:
+                      - entity: light.bathroom_light
+                      - name: Light
   - title: 2F
     path: second_floor
     icon: mdi:home-floor-2
