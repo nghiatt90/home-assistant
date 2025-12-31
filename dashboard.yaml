@@ -29,7 +29,7 @@ decluttering_templates:
           forecast_type: daily
           forecast_slots: 5
         - type: grid
-          columns: 3
+          columns: 4
           square: true
           cards:
             - type: custom:button-card
@@ -42,6 +42,16 @@ decluttering_templates:
               entity: person.queen
               variables:
                 photo: /api/image/serve/c14c93894c5bd2d915c5c5e9bf6542f1/512x512
+            - type: custom:button-card
+              template: person_card
+              entity: sensor.mamoru_presence
+              variables:
+                photo: /api/image/serve/415b26a5a7c6123f5742dbb09578cf41/512x512
+            - type: custom:button-card
+              template: person_card
+              entity: person.arashi
+              variables:
+                photo: /api/image/serve/350a0f5cb85f12118ea1989dc1d5246f/512x512
   room_light:
     variables:
       - entity
