@@ -1,0 +1,152 @@
+title: Smart Home Dashboard
+button_card_templates:
+  person_card:
+    show_name: false
+    show_icon: false
+    show_state: false
+    aspect_ratio: 1/1
+    tap_action:
+      action: none
+    styles:
+      card:
+        - width: 120px
+        - height: 120px
+        - border-radius: 50%
+        - padding: 0
+        - background-image: '[[[ return `url("${variables.photo}")`; ]]]'
+        - background-size: cover
+        - background-position: center
+        - background-repeat: no-repeat
+        - box-shadow: none
+        - border: none
+        - filter: |
+            [[[
+              return entity.state === 'home'
+                ? 'none'
+                : 'grayscale(100%) opacity(0.4)';
+            ]]]
+views:
+  - title: 1F
+    path: first_floor
+    icon: mdi:home-floor-1
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.time_date
+            primary_info: none
+            fill_container: false
+            hold_action:
+              action: none
+            double_tap_action:
+              action: none
+          - type: custom:simple-weather-card
+            entity: weather.forecast_home
+            name: outside
+            backdrop:
+              fade: true
+              day: var(--primary-color)
+              night: '#1c1c1c'
+            primary_info:
+              - wind_speed
+              - humidity
+            secondary_info:
+              - precipitation
+              - precipitation_probability
+            tap_action:
+              action: none
+          - show_current: false
+            show_forecast: true
+            type: weather-forecast
+            entity: weather.forecast_home
+            forecast_type: daily
+            forecast_slots: 3
+          - square: false
+            type: grid
+            cards:
+              - type: custom:button-card
+                template: person_card
+                entity: person.yoshi
+                variables:
+                  photo: /api/image/serve/e660264008823723d4e1c7ba27a88402/512x512
+              - type: custom:button-card
+                template: person_card
+                entity: person.queen
+                variables:
+                  photo: /api/image/serve/c14c93894c5bd2d915c5c5e9bf6542f1/512x512
+            columns: 3
+      - type: picture-elements
+        camera_image: camera.front_door_fluent
+        camera_view: live
+        elements:
+          - type: state-icon
+            entity: lock.main_door
+            tap_action:
+              action: toggle
+            style:
+              top: 90%
+              left: 95%
+              transform: translate(-50%, -50%)
+          - type: state-icon
+            entity: binary_sensor.main_door
+            style:
+              top: 90%
+              left: 89%
+            card_mod:
+              style: |
+                :host{
+                  --state-binary_sensor-door-on-color: red !important;
+                  --state-binary_sensor-door-off-color: #4CAF50 !important;
+                  --mdc-icon-size: 27px;
+                  background: none !important;
+                }
+  - title: 2F
+    path: second_floor
+    icon: mdi:home-floor-2
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: climate
+            entity: climate.main_ac
+            name: Main AC
+          - type: media-control
+            entity: media_player.living_room_speaker
+          - type: entities
+            title: TV
+            entities:
+              - entity: media_player.tv
+                name: TV
+                icon: mdi:television
+  - title: 3F
+    path: third_floor
+    icon: mdi:home-floor-3
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: entities
+            title: Master bedroom
+            entities:
+              - entity: light.bedroom_light
+                name: Bedroom Light
+                icon: mdi:ceiling-light
+              - entity: climate.bedroom_ac
+                name: Main AC
+                icon: mdi:air-conditioner
+              - entity: media_player.master_bedroom_speaker
+                name: Bedroom speaker
+                icon: mdi:speaker
+          - type: entities
+            title: Queen''s chamber
+            entities:
+              - entity: light.office_light_2
+                name: Queen''s Chamber Light
+                icon: mdi:ceiling-light
+              - entity: climate.office_ac_2
+                name: Queen''s chamber AC
+                icon: mdi:air-conditioner
+              - entity: media_player.queen_s_chamber_wifi
+                name: Queen''s chamber Nest point
+                icon: mdi:speaker
