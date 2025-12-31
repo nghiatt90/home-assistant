@@ -6,47 +6,48 @@ Home network is centered around **Google Nest Wifi**, spanning **three floors** 
 
 ## Diagram
 
-                    ┌──────────────────────────┐
-                    │  ISP Router NURO SGP200W │
-                    │        (upstream)        │
-                    │       192.168.1.1        │
-                    │  2F – center location    │
-                    └─────────────┬────────────┘
-                                  │
-                    ┌─────────────▼────────────┐
-                    │  Google Nest Wifi Router │
-                    │       (Main / NAT)       │
-                    │       192.168.86.1       │
-                    │  2F – living / center    │
-                    └─────────────┬────────────┘
-                                  │
-          ┌───────────────────────┼────────────────────────┐
-          │                                                │
-┌─────────▼─────────┐                            ┌─────────▼─────────┐
-│  Nest Wifi Point  │                            │   Ethernet Run    │
-│  3F – coverage    │                            │   (wall socket)   │
-│  (wireless mesh)  │                            │   to 1F corner    │
-└───────────────────┘                            └─────────┬─────────┘
-                                                           │
-                                   ┌───────────────────────┼────────────────────────┐
-						           │                                                |
-						 ┌─────────▼─────────┐                       ┌──────────────▼──────────────┐
-						 │  Nest Wifi Point  │                       │     Physical Ethernet Hub   │
-						 │  1F – coverage    │                       │      (unmanaged switch)     │
-						 │  (wireless mesh)  │                       │     1F – corner location    │
-						 └───────────────────┘                       └──────────────┬──────────────┘
-						                                                            │
-						                                             ┌──────────────▼──────────────┐
-						                                             │      Intel NUC (Proxmox)    │
-						                                             │        192.168.86.253       │
-						                                             │         1F – near hub       │
-						                                             └──────────────┬──────────────┘
-						                                                            │
-						                                             ┌──────────────▼──────────────┐
-						                                             │   Home Assistant VM (HAOS)  │
-						                                             │       192.168.86.252        │
-						                                             │    (on Proxmox, bridged)    │
-						                                             └─────────────────────────────┘
+```mermaid
+flowchart TB
+    %% ISP & Core Network
+    ISP[ISP Router<br/>NURO SGP200W<br/>192.168.1.1<br/>(Upstream only)]
+    NestRouter[Google Nest Wifi Router<br/>Main / NAT<br/>192.168.86.1<br/>2F – Living center]
+
+    ISP --> NestRouter
+
+    %% Mesh & Wired Distribution
+    Nest3F[Nest Wifi Point<br/>3F – Wireless Mesh]
+    Nest1F[Nest Wifi Point<br/>1F – Wireless Mesh]
+
+    NestRouter --> Nest3F
+    NestRouter -->|Ethernet (wall run)| Switch1F
+
+    Switch1F[Unmanaged Ethernet Switch<br/>1F – Corner]
+
+    Switch1F --> Nest1F
+    Switch1F --> NUC
+
+    %% Compute
+    NUC[Intel NUC<br/>Proxmox Host<br/>192.168.86.253]
+
+    NUC --> HA[Home Assistant OS VM<br/>192.168.86.252<br/>(Bridged Network)]
+
+    %% Smart Home Devices
+    HA --> Daikin[Daikin ACs<br/>Urusara (Wi-Fi)]
+    HA --> SwitchBot[SwitchBot Cloud<br/>Lights / Lock / IR]
+    HA --> ReolinkPoE[Reolink RLC-811A<br/>PoE Camera]
+    HA --> LGTV[LG webOS TV]
+    HA --> NestAudio[Google Nest Mini ×2]
+
+    %% Planned Zigbee
+    Zigbee[Zigbee Coordinator<br/>SMLIGHT SLZB-06M<br/>PoE / Ethernet<br/>2F Central]
+    HA --> Zigbee
+
+    Zigbee --> ZigbeeSensors[SONOFF Sensors<br/>Temp / Motion]
+    Zigbee --> ZigbeePlugs[IKEA INSPELNING<br/>Repeaters]
+
+    %% Planned Cameras
+    HA --> ReolinkIndoor[Reolink E1 Zoom ×2<br/>Wi-Fi Indoor]
+```
 
 
 
