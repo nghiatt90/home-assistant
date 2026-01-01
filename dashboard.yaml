@@ -176,38 +176,48 @@ views:
       - type: grid
         column_span: 1
         cards:
-          - type: heading
-            heading: Entrance
-          - type: picture-elements
-            camera_image: camera.front_door_fluent
-            camera_view: live
-            elements:
-              - type: state-icon
-                entity: lock.main_door
-                tap_action:
-                  action: toggle
-                style:
-                  top: 5%
-                  left: 96%
-                  transform: translate(-50%, -50%)
-              - type: state-icon
-                entity: binary_sensor.main_door
-                style:
-                  top: 15%
-                  left: 95%
-                card_mod:
-                  style: |
-                    :host{
-                      --state-binary_sensor-door-on-color: red !important;
-                      --state-binary_sensor-door-off-color: #4CAF50 !important;
-                      --mdc-icon-size: 27px;
-                      background: none !important;
-                    }
-              - type: state-icon
-                entity: sensor.main_door_battery
-                style:
-                  top: 25%
-                  left: 96%
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none;
+                  box-shadow: none;
+                  background: none;
+                }
+            cards:
+              - type: heading
+                heading: Entrance
+              - type: picture-elements
+                camera_image: camera.front_door_fluent
+                camera_view: live
+                elements:
+                  - type: state-icon
+                    entity: lock.main_door
+                    tap_action:
+                      action: toggle
+                    style:
+                      top: 5%
+                      left: 96%
+                      transform: translate(-50%, -50%)
+                  - type: state-icon
+                    entity: binary_sensor.main_door
+                    style:
+                      top: 15%
+                      left: 95%
+                    card_mod:
+                      style: |
+                        :host{
+                          --state-binary_sensor-door-on-color: red !important;
+                          --state-binary_sensor-door-off-color: #4CAF50 !important;
+                          --mdc-icon-size: 27px;
+                          background: none !important;
+                        }
+                  - type: state-icon
+                    entity: sensor.main_door_battery
+                    style:
+                      top: 25%
+                      left: 96%
       - type: grid
         column_span: 1
         cards:
@@ -256,21 +266,92 @@ views:
   - title: 2F
     path: second_floor
     icon: mdi:home-floor-2
-    badges: []
-    cards:
-      - type: vertical-stack
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        column_span: 1
         cards:
-          - type: climate
-            entity: climate.main_ac
-            name: Main AC
-          - type: media-control
-            entity: media_player.living_room_speaker
-          - type: entities
-            title: TV
-            entities:
-              - entity: media_player.tv
-                name: TV
-                icon: mdi:television
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none;
+                  box-shadow: none;
+                  background: none;
+                }
+            cards:
+              - type: custom:decluttering-card
+                template: common_sidebar
+      - type: grid
+        cards:
+          - type: custom:stack-in-card
+            mode: vertical
+            cards:
+              - type: picture-elements
+                camera_image: camera.living_room_camera_fluent
+                camera_view: live
+                elements: []
+              - type: custom:decluttering-card
+                template: room_light
+                variables:
+                  - entity: light.kitchen_lights
+                  - name: Kitchen Lights
+              - type: custom:decluttering-card
+                template: room_light
+                variables:
+                  - entity: light.dining_lights
+                  - name: Dining Lights
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:xiaomi-vacuum-map-card
+            title: The Guardian
+            preset_name: Live map
+            entity: vacuum.roborock_s7_maxv
+            map_source:
+              camera: image.roborock_s7_maxv_map_0_custom
+            calibration_source:
+              camera: true
+            map_modes:
+              - template: vacuum_clean_zone
+              - template: vacuum_clean_zone_predefined
+                predefined_selections:
+                  - zones:
+                      - - 21000
+                        - 22600
+                        - 23750
+                        - 28000
+                      - - 23750
+                        - 22600
+                        - 26500
+                        - 25800
+                    label:
+                      text: Living room
+                      x: 22350
+                      'y': 26000
+                      offset_y: 35
+                    icon:
+                      name: mdi:sofa
+                      x: 22350
+                      'y': 26000
+                  - zones:
+                      - - 23750
+                        - 26500
+                        - 26500
+                        - 28000
+                    label:
+                      text: Kitchen
+                      x: 25125
+                      'y': 27250
+                      offset_y: 35
+                    icon:
+                      name: mdi:stove
+                      x: 25125
+                      'y': 27250
+              - template: vacuum_goto
+              - template: vacuum_follow_path
   - title: 3F
     path: third_floor
     icon: mdi:home-floor-3
