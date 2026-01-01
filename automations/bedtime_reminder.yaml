@@ -7,14 +7,8 @@ conditions: []
 actions:
   - variables:
       core_message: It's almost time to sleep.
-      yoshi_battery_level: "{{ states('sensor.yoshi_s_phone_battery_level')|int }}"
-      queen_battery_level: "{{ states('sensor.queen_s_phone_battery_level')|int }}"
-      yoshi_charging_state: "{{ states('sensor.yoshi_s_phone_battery_state') }}"
-      queen_charging_state: "{{ states('sensor.queen_s_phone_battery_state') }}"
-      yoshi_should_charge: >-
-        {{ yoshi_battery_level < 50 and yoshi_charging_state not in ['full', 'charging'] }}
-      queen_should_charge: >-
-        {{ queen_battery_level < 50 and queen_charging_state not in ['full', 'charging'] }}
+      yoshi_should_charge: "{{ states('binary_sensor.yoshi_should_charge')|bool }}"
+      queen_should_charge: "{{ states('binary_sensor.queen_should_charge')|bool }}"
       battery_warnings: |-
         {% if yoshi_should_charge and queen_should_charge %}
           Yoshi and QP, you should charge your phones.
