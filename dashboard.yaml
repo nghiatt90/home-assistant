@@ -104,6 +104,27 @@ decluttering_templates:
                 border: none;
                 box-shadow: none;
               }
+  area_card:
+    variables:
+      - title
+      - cards
+    card:
+      type: custom:stack-in-card
+      mode: vertical
+      card_mod:
+        style: |
+          ha-card {
+            border-radius: 16px;
+            border: 1px solid var(--divider-color);
+            box-shadow: none;
+            padding: 12px;
+          }
+      cards:
+        - type: heading
+          heading: '[[title]]'
+          heading_style: title
+        - type: vertical-stack
+          cards: '[[cards]]'
 button_card_templates:
   person_card:
     show_name: false
@@ -192,49 +213,46 @@ views:
         cards:
           - type: vertical-stack
             cards:
-              - type: custom:stack-in-card
-                mode: vertical
-                cards:
-                  - type: heading
-                    heading: Office 1
-                    heading_style: title
-                  - type: custom:decluttering-card
-                    template: room_light
-                    variables:
-                      - entity: light.office_light_1
-                      - name: Light
-                  - type: custom:decluttering-card
-                    template: room_climate
-                    variables:
-                      - entity: climate.office_ac_1
-                      - name: AC
-              - type: custom:stack-in-card
-                mode: vertical
-                cards:
-                  - type: heading
-                    heading: Guest Bedroom
-                    heading_style: title
-                  - type: custom:decluttering-card
-                    template: room_light
-                    variables:
-                      - entity: light.guest_bedroom_light
-                      - name: Light
-                  - type: custom:decluttering-card
-                    template: room_climate
-                    variables:
-                      - entity: climate.guest_bedroom_ac
-                      - name: AC
-              - type: custom:stack-in-card
-                mode: vertical
-                cards:
-                  - type: heading
-                    heading: Bathroom
-                    heading_style: title
-                  - type: custom:decluttering-card
-                    template: room_light
-                    variables:
-                      - entity: light.bathroom_light
-                      - name: Light
+              - type: custom:decluttering-card
+                template: area_card
+                variables:
+                  - title: Office 1
+                  - cards:
+                      - type: custom:decluttering-card
+                        template: room_light
+                        variables:
+                          - entity: light.office_light_1
+                          - name: Light
+                      - type: custom:decluttering-card
+                        template: room_climate
+                        variables:
+                          - entity: climate.office_ac_1
+                          - name: AC
+              - type: custom:decluttering-card
+                template: area_card
+                variables:
+                  - title: Guest Bedroom
+                  - cards:
+                      - type: custom:decluttering-card
+                        template: room_light
+                        variables:
+                          - entity: light.guest_bedroom_light
+                          - name: Light
+                      - type: custom:decluttering-card
+                        template: room_climate
+                        variables:
+                          - entity: climate.guest_bedroom_ac
+                          - name: AC
+              - type: custom:decluttering-card
+                template: area_card
+                variables:
+                  - title: Bathroom
+                  - cards:
+                      - type: custom:decluttering-card
+                        template: room_light
+                        variables:
+                          - entity: light.bathroom_light
+                          - name: Light
   - title: 2F
     path: second_floor
     icon: mdi:home-floor-2
