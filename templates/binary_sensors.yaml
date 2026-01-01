@@ -1,0 +1,55 @@
+- default_entity_id: binary_sensor.yoshi_should_charge_25
+  name: yoshi_should_charge_25
+  unique_id: yoshi_should_charge_25
+  state: >-
+    {% if states('sensor.yoshi_s_phone_battery_level')|int < 25 and states('sensor.yoshi_s_phone_battery_state') not in ['full', 'charging'] %}
+      on
+    {% else %}
+      off
+    {% endif %}
+- default_entity_id: binary_sensor.yoshi_should_charge_50
+  name: yoshi_should_charge_50
+  unique_id: yoshi_should_charge_50
+  state: >-
+    {% if states('sensor.yoshi_s_phone_battery_level')|int < 50 and states('sensor.yoshi_s_phone_battery_state') not in ['full', 'charging'] %}
+      on
+    {% else %}
+      off
+    {% endif %}
+- default_entity_id: binary_sensor.queen_should_charge_25
+  name: queen_should_charge_25
+  unique_id: queen_should_charge_25
+  state: >-
+    {% if states('sensor.queen_s_phone_battery_level')|int < 25 and states('sensor.queen_s_phone_battery_state') not in ['full', 'charging'] %}
+      on
+    {% else %}
+      off
+    {% endif %}
+- default_entity_id: binary_sensor.queen_should_charge_50
+  name: queen_should_charge_50
+  unique_id: queen_should_charge_50
+  state: >-
+    {% if states('sensor.queen_s_phone_battery_level')|int < 50 and states('sensor.queen_s_phone_battery_state') not in ['full', 'charging'] %}
+      on
+    {% else %}
+      off
+    {% endif %}
+- default_entity_id: binary_sensor.someone_should_charge_25
+  name: someone_should_charge_25
+  unique_id: someone_should_charge_25
+  state: "{{ 'on' if this.attributes.yoshi_should_charge or this.attributes.queen_should_charge else 'off' }}"
+  attributes:
+    yoshi_should_charge: "{{ is_state('binary_sensor.yoshi_should_charge_25', 'on') }}"
+    queen_should_charge: "{{ is_state('binary_sensor.queen_should_charge_25', 'on') }}"
+    message: >-
+      {% set yoshi = is_state('binary_sensor.yoshi_should_charge_25', 'on') %}
+      {% set queen = is_state('binary_sensor.queen_should_charge_25', 'on') %}
+      {% if yoshi and queen %}
+        Yoshi and QP, both of you should charge your phones
+      {% elif yoshi %}
+        Yoshi, you should charge your phone
+      {% elif queen %}
+        QP, you should charge your phone
+      {% else %}
+        
+      {% endif %}

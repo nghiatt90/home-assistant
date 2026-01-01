@@ -1,5 +1,0 @@
-{% if states('sensor.queen_s_phone_battery_level')|int < 25 and states('sensor.queen_s_phone_battery_state') not in ['full', 'charging'] %}
-  on
-{% else %}
-  off
-{% endif %}

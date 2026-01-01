@@ -1,0 +1,23 @@
+alias: Phone charge reminder
+description: "Remind family to charge their phone during the day"
+triggers:
+  - trigger: time_pattern
+    hours: "*"
+conditions:
+  - condition: and
+    conditions:
+      - condition: time
+        after: "09:00:00"
+        before: "22:00:00"
+      - condition: state
+        entity_id: binary_sensor.someone_should_charge_25
+        state:
+          - "on"
+actions:
+  - action: tts.cloud_say
+    metadata: {}
+    data:
+      cache: false
+      entity_id: media_player.all_speakers
+      message: "{{ state_attr('binary_sensor.someone_should_charge_25', 'message') }}"
+mode: single
