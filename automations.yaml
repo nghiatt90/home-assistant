@@ -78,3 +78,92 @@
       message: '{{ state_attr(''binary_sensor.someone_should_charge_25'', ''message'')
         }}'
   mode: single
+- id: office1_light_on_presence
+  alias: Office 1 Light On When Presence Detected
+  description: Turn on the office light when presence is detected and it's dark
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.office_1_presence_sensor_occupancy
+    to: 'on'
+  conditions:
+  - condition: state
+    entity_id: sensor.office_1_presence_sensor_illumination
+    state: dim
+  - condition: device
+    type: is_off
+    device_id: 4989f69328406eb777402634a0dd11dd
+    entity_id: 0d1f8bbd072e879cb909b53f46bccb8b
+    domain: light
+  actions:
+  - action: light.turn_on
+    target:
+      entity_id: light.office_light_1
+  mode: single
+- id: office1_ac_heating_on_presence
+  alias: Office 1 AC Heating When Cold
+  description: Turn on AC in heating mode when presence detected and temperature is
+    below minimum comfortable
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.office_1_presence_sensor_occupancy
+    to: 'on'
+  conditions:
+  - condition: template
+    value_template: "{{ states('sensor.office_1_climate_sensor_temperature') | float
+      <\n   states('number.office_1_climate_sensor_comfort_temperature_min') | float
+      }}"
+  - condition: device
+    type: is_off
+    device_id: 18716ac662774a1501679b39f20f53f6
+    entity_id: 83fc3d2d05d4d936c634cf8199f2f3ac
+    domain: switch
+  actions:
+  - action: climate.set_hvac_mode
+    target:
+      entity_id: climate.office_ac_1
+    data:
+      hvac_mode: heat
+  mode: single
+- id: office1_ac_cooling_on_presence
+  alias: Office 1 AC Cooling When Hot
+  description: Turn on AC in cooling mode when presence detected and temperature is
+    above maximum comfortable
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.office_1_presence_sensor_occupancy
+    to: 'on'
+  conditions:
+  - condition: template
+    value_template: "{{ states('sensor.office_1_climate_sensor_temperature') | float
+      >\n   states('number.office_1_climate_sensor_comfort_temperature_max') | float
+      }}"
+  - condition: device
+    type: is_off
+    device_id: 18716ac662774a1501679b39f20f53f6
+    entity_id: 83fc3d2d05d4d936c634cf8199f2f3ac
+    domain: switch
+  actions:
+  - action: climate.set_hvac_mode
+    target:
+      entity_id: climate.office_ac_1
+    data:
+      hvac_mode: cool
+  mode: single
+- id: office1_turn_off_no_presence
+  alias: Office 1 Turn Off After No Presence
+  description: Turn off light and AC when no presence detected for 15 minutes
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.office_1_presence_sensor_occupancy
+    to: 'off'
+    for:
+      minutes: 15
+  conditions: []
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id: light.office_light_1
+  - action: climate.turn_off
+    target:
+      entity_id: climate.office_ac_1
+  mode: single
