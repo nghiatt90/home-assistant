@@ -89,11 +89,10 @@
   - condition: state
     entity_id: sensor.office_1_presence_sensor_illumination
     state: dim
-  - condition: device
-    type: is_off
-    device_id: 4989f69328406eb777402634a0dd11dd
-    entity_id: 0d1f8bbd072e879cb909b53f46bccb8b
-    domain: light
+  - condition: state
+    entity_id: light.office_light_1
+    state:
+    - 'off'
   actions:
   - action: light.turn_on
     target:
@@ -112,11 +111,10 @@
     value_template: "{{ states('sensor.office_1_climate_sensor_temperature') | float
       <\n   states('number.office_1_climate_sensor_comfort_temperature_min') | float
       }}"
-  - condition: device
-    type: is_off
-    device_id: 18716ac662774a1501679b39f20f53f6
-    entity_id: 83fc3d2d05d4d936c634cf8199f2f3ac
-    domain: switch
+  - condition: state
+    entity_id: climate.office_ac_1
+    state:
+    - 'off'
   actions:
   - action: climate.set_hvac_mode
     target:
@@ -137,11 +135,10 @@
     value_template: "{{ states('sensor.office_1_climate_sensor_temperature') | float
       >\n   states('number.office_1_climate_sensor_comfort_temperature_max') | float
       }}"
-  - condition: device
-    type: is_off
-    device_id: 18716ac662774a1501679b39f20f53f6
-    entity_id: 83fc3d2d05d4d936c634cf8199f2f3ac
-    domain: switch
+  - condition: state
+    entity_id: climate.office_ac_1
+    state:
+    - 'off'
   actions:
   - action: climate.set_hvac_mode
     target:
