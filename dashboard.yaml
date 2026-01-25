@@ -407,32 +407,90 @@ views:
   - title: 3F
     path: third_floor
     icon: mdi:home-floor-3
-    badges: []
-    cards:
-      - type: vertical-stack
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        column_span: 1
         cards:
-          - type: entities
-            title: Master bedroom
-            entities:
-              - entity: light.bedroom_light
-                name: Bedroom Light
-                icon: mdi:ceiling-light
-              - entity: climate.bedroom_ac
-                name: Bedroom AC
-                icon: mdi:air-conditioner
-              - entity: media_player.master_bedroom_speaker
-                name: Bedroom speaker
-                icon: mdi:speaker
-          - type: entities
-            title: Queen's chamber
-            entities:
-              - entity: light.office_light_2
-                name: Queen's Chamber Light
-                icon: mdi:ceiling-light
-              - entity: climate.office_ac_2
-                name: Queen's chamber AC
-                icon: mdi:air-conditioner
-              - entity: media_player.queen_s_chamber_wifi
-                name: Queen's chamber Nest point
-                icon: mdi:speaker
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none;
+                  box-shadow: none;
+                  background: none;
+                }
+            cards:
+              - type: custom:decluttering-card
+                template: common_sidebar
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none;
+                  box-shadow: none;
+                  background: none;
+                }
+            cards:
+              - type: heading
+                heading: Master Bedroom
+              - type: picture-elements
+                camera_image: camera.bedroom_camera_fluent
+                elements:
+                  - type: image
+                    image: data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+                    entity: camera.bedroom_camera_fluent
+                    tap_action:
+                      action: more-info
+                    style:
+                      top: 0%
+                      left: 0%
+                      width: 200%
+                      height: 200%
+              - type: custom:decluttering-card
+                template: room_light
+                variables:
+                  - entity: light.bedroom_light
+                  - name: Light
+              - type: custom:decluttering-card
+                template: room_climate
+                variables:
+                  - entity: climate.bedroom_ac
+                  - name: AC
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:decluttering-card
+            template: area_card
+            variables:
+              - title: Queen's Chamber
+              - cards:
+                  - type: custom:decluttering-card
+                    template: room_light
+                    variables:
+                      - entity: light.office_light_2
+                      - name: Light
+                  - type: custom:decluttering-card
+                    template: room_climate
+                    variables:
+                      - entity: climate.office_ac_2
+                      - name: AC
+                  - type: custom:mushroom-media-player-card
+                    entity: media_player.queen_s_chamber_wifi
+                    name: Nest Point
+                    icon: mdi:speaker
+                    use_media_info: true
+                    show_volume_level: true
+                    volume_controls:
+                      - volume_set
+                      - volume_mute
+                    media_controls:
+                      - play_pause
+                    collapsible_controls: true
 
