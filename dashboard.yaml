@@ -558,4 +558,220 @@ views:
                     variables:
                       - entity: media_player.queen_s_chamber_wifi
                       - name: Nest Point
-
+  - title: Home
+    path: home
+    icon: mdi:home
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none;
+                  box-shadow: none;
+                  background: none;
+                }
+            cards:
+              - type: heading
+                heading: People
+                heading_style: title
+              - type: grid
+                columns: 4
+                square: true
+                cards:
+                  - type: custom:button-card
+                    template: person_card
+                    entity: person.yoshi
+                    variables:
+                      photo: /api/image/serve/e660264008823723d4e1c7ba27a88402/512x512
+                  - type: custom:button-card
+                    template: person_card
+                    entity: person.queen
+                    variables:
+                      photo: /api/image/serve/c14c93894c5bd2d915c5c5e9bf6542f1/512x512
+                  - type: custom:button-card
+                    template: person_card
+                    entity: sensor.mamoru_presence
+                    variables:
+                      photo: /api/image/serve/415b26a5a7c6123f5742dbb09578cf41/512x512
+                  - type: custom:button-card
+                    template: person_card
+                    entity: person.arashi
+                    variables:
+                      photo: /api/image/serve/350a0f5cb85f12118ea1989dc1d5246f/512x512
+              - type: heading
+                heading: Batteries
+                heading_style: title
+              - type: glance
+                entities:
+                  - entity: sensor.main_door_battery
+                    name: Door Lock
+                    icon: mdi:door-closed-lock
+                  - entity: sensor.roborock_s7_maxv_battery
+                    name: Vacuum
+                    icon: mdi:robot-vacuum
+                  - entity: sensor.office_1_climate_sensor_battery
+                    name: Office 1
+                    icon: mdi:thermometer
+                  - entity: sensor.living_room_climate_sensor_battery
+                    name: Living Rm
+                    icon: mdi:thermometer
+                show_state: true
+                show_icon: true
+                show_name: true
+                columns: 4
+              - type: glance
+                entities:
+                  - entity: sensor.guest_bedroom_climate_sensor_battery
+                    name: Guest Bed
+                    icon: mdi:thermometer
+                  - entity: sensor.bedroom_climate_sensor_battery
+                    name: Bedroom
+                    icon: mdi:thermometer
+                  - entity: sensor.office_2_climate_sensor_battery
+                    name: Office 2
+                    icon: mdi:thermometer
+                show_state: true
+                show_icon: true
+                show_name: true
+                columns: 4
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none;
+                  box-shadow: none;
+                  background: none;
+                }
+            cards:
+              - type: heading
+                heading: Climate Control
+                heading_style: title
+              - type: custom:mushroom-climate-card
+                entity: climate.main_ac
+                name: Living Room AC
+                icon: mdi:air-conditioner
+                show_temperature_control: true
+                collapsible_controls: true
+                hvac_modes:
+                  - cool
+                  - heat
+                  - dry
+                  - 'off'
+              - type: custom:mushroom-climate-card
+                entity: climate.office_ac_1
+                name: Office 1 AC
+                icon: mdi:air-conditioner
+                show_temperature_control: true
+                collapsible_controls: true
+                hvac_modes:
+                  - cool
+                  - heat
+                  - dry
+                  - 'off'
+              - type: custom:mushroom-climate-card
+                entity: climate.guest_bedroom_ac
+                name: Guest Bedroom AC
+                icon: mdi:air-conditioner
+                show_temperature_control: true
+                collapsible_controls: true
+                hvac_modes:
+                  - cool
+                  - heat
+                  - dry
+                  - 'off'
+              - type: custom:mushroom-climate-card
+                entity: climate.bedroom_ac
+                name: Bedroom AC
+                icon: mdi:air-conditioner
+                show_temperature_control: true
+                collapsible_controls: true
+                hvac_modes:
+                  - cool
+                  - heat
+                  - dry
+                  - 'off'
+              - type: custom:mushroom-climate-card
+                entity: climate.office_ac_2
+                name: Queen's Chamber AC
+                icon: mdi:air-conditioner
+                show_temperature_control: true
+                collapsible_controls: true
+                hvac_modes:
+                  - cool
+                  - heat
+                  - dry
+                  - 'off'
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border: none;
+                  box-shadow: none;
+                  background: none;
+                }
+            cards:
+              - type: heading
+                heading: Lights
+                heading_style: title
+              - type: custom:mushroom-light-card
+                entity: light.main_light
+                name: Living Room
+                use_light_color: true
+                show_brightness_control: true
+                collapsible_controls: true
+              - type: custom:mushroom-light-card
+                entity: light.kitchen_lights
+                name: Kitchen
+                use_light_color: true
+                show_brightness_control: true
+                collapsible_controls: true
+              - type: custom:mushroom-light-card
+                entity: light.dining_lights
+                name: Dining
+                use_light_color: true
+                show_brightness_control: true
+                collapsible_controls: true
+              - type: custom:mushroom-light-card
+                entity: light.office_light_1
+                name: Office 1
+                use_light_color: true
+                show_brightness_control: true
+                collapsible_controls: true
+              - type: custom:mushroom-light-card
+                entity: light.guest_bedroom_light
+                name: Guest Bedroom
+                use_light_color: true
+                show_brightness_control: true
+                collapsible_controls: true
+              - type: custom:mushroom-light-card
+                entity: light.bathroom_light
+                name: Bathroom
+                use_light_color: true
+                show_brightness_control: true
+                collapsible_controls: true
+              - type: custom:mushroom-light-card
+                entity: light.bedroom_light
+                name: Bedroom
+                use_light_color: true
+                show_brightness_control: true
+                collapsible_controls: true
+              - type: custom:mushroom-light-card
+                entity: light.office_light_2
+                name: Queen's Chamber
+                use_light_color: true
+                show_brightness_control: true
+                collapsible_controls: true
