@@ -196,8 +196,18 @@ views:
                 heading: Entrance
               - type: picture-elements
                 camera_image: camera.front_door_fluent
-                camera_view: live
                 elements:
+                  - type: image
+                    image: data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+                    entity: camera.front_door_fluent
+                    tap_action:
+                      action: more-info
+                    style:
+                      top: 0%
+                      left: 0%
+                      width: 200%
+                      height: 200%
+                      z-index: 1
                   - type: state-icon
                     entity: lock.main_door
                     tap_action:
@@ -206,11 +216,13 @@ views:
                       top: 5%
                       left: 96%
                       transform: translate(-50%, -50%)
+                      z-index: 2
                   - type: state-icon
                     entity: binary_sensor.main_door
                     style:
                       top: 15%
                       left: 95%
+                      z-index: 2
                     card_mod:
                       style: |
                         :host{
@@ -224,6 +236,7 @@ views:
                     style:
                       top: 25%
                       left: 96%
+                      z-index: 2
       - type: grid
         column_span: 1
         cards:
@@ -297,8 +310,17 @@ views:
             cards:
               - type: picture-elements
                 camera_image: camera.living_room_camera_fluent
-                camera_view: live
-                elements: []
+                elements:
+                  - type: image
+                    image: data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
+                    entity: camera.living_room_camera_fluent
+                    tap_action:
+                      action: more-info
+                    style:
+                      top: 0%
+                      left: 0%
+                      width: 200%
+                      height: 200%
               - type: custom:decluttering-card
                 template: room_climate
                 variables:

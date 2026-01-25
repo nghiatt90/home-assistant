@@ -85,14 +85,19 @@
   - trigger: state
     entity_id: binary_sensor.office_1_presence_sensor_occupancy
     to: 'on'
+  - trigger: state
+    entity_id: sensor.office_1_presence_sensor_illumination
+    to: dim
   conditions:
+  - condition: state
+    entity_id: binary_sensor.office_1_presence_sensor_occupancy
+    state: 'on'
   - condition: state
     entity_id: sensor.office_1_presence_sensor_illumination
     state: dim
   - condition: state
     entity_id: light.office_light_1
-    state:
-    - 'off'
+    state: 'off'
   actions:
   - action: light.turn_on
     target:
@@ -151,10 +156,10 @@
   description: Turn off light and AC when no presence detected for 15 minutes
   triggers:
   - trigger: state
-    entity_id: binary_sensor.office_1_presence_sensor_occupancy
-    to: 'off'
-    for:
-      minutes: 15
+    entity_id:
+    - binary_sensor.office_1_presence_sensor_occupancy
+    to:
+    - 'off'
   conditions: []
   actions:
   - action: light.turn_off
