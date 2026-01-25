@@ -108,6 +108,9 @@ decluttering_templates:
     variables:
       - title
       - cards
+      - temperature_entity: null
+      - humidity_entity: null
+      - occupancy_entity: null
     card:
       type: custom:stack-in-card
       mode: vertical
@@ -123,6 +126,20 @@ decluttering_templates:
         - type: heading
           heading: '[[title]]'
           heading_style: title
+        - type: custom:mushroom-chips-card
+          chips:
+            - type: entity
+              entity: '[[temperature_entity]]'
+              icon: mdi:thermometer
+              content_info: state
+            - type: entity
+              entity: '[[humidity_entity]]'
+              icon: mdi:water-percent
+              content_info: state
+            - type: entity
+              entity: '[[occupancy_entity]]'
+              icon: mdi:motion-sensor
+              content_info: none
         - type: vertical-stack
           cards: '[[cards]]'
 button_card_templates:
@@ -246,6 +263,9 @@ views:
                 template: area_card
                 variables:
                   - title: Office 1
+                  - temperature_entity: sensor.office_1_climate_sensor_temperature
+                  - humidity_entity: sensor.office_1_climate_sensor_humidity
+                  - occupancy_entity: binary_sensor.office_1_presence_sensor_occupancy
                   - cards:
                       - type: custom:decluttering-card
                         template: room_light
