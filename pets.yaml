@@ -105,7 +105,7 @@ views:
                   - type: button
                     entity: button.arashi_s_toilet_1_level_litter
                     name: Level
-                    icon: mdi:flatten
+                    icon: mdi:arrow-expand-horizontal
                     tap_action:
                       action: toggle
                   - type: button
