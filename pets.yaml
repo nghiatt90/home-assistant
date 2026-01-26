@@ -42,6 +42,8 @@ views:
                     name: Last Litter Used
                   - entity: sensor.arashi_last_weight_measurement
                     name: Last Weight
+                  - entity: sensor.cat_feeder_1_average_eating_time
+                    name: Avg Eating Time
       - type: grid
         column_span: 1
         cards:
@@ -67,9 +69,17 @@ views:
                     icon: mdi:state-machine
                     content_info: state
                   - type: entity
+                    entity: binary_sensor.arashi_s_toilet_1_toilet_occupied
+                    icon: mdi:cat
+                    content_info: none
+                  - type: entity
                     entity: sensor.arashi_s_toilet_1_litter_level
                     icon: mdi:gauge
                     content_info: state
+                  - type: entity
+                    entity: binary_sensor.arashi_s_toilet_1_sand_lack
+                    icon: mdi:alert
+                    content_info: none
                   - type: entity
                     entity: binary_sensor.arashi_s_toilet_1_wastebin_filled
                     icon: mdi:trash-can
@@ -106,18 +116,38 @@ views:
                       action: toggle
               - type: custom:mushroom-chips-card
                 chips:
-                  - type: entity
+                  - type: template
                     entity: switch.arashi_s_toilet_1_auto_clean
                     icon: mdi:refresh-auto
-                    content_info: none
-                  - type: entity
+                    icon_color: "{{ 'green' if is_state('switch.arashi_s_toilet_1_auto_clean', 'on') else 'grey' }}"
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                  - type: template
+                    entity: switch.arashi_s_toilet_1_ai_soft_stool_detection
+                    icon: mdi:emoticon-poop
+                    icon_color: "{{ 'amber' if is_state('switch.arashi_s_toilet_1_ai_soft_stool_detection', 'on') else 'grey' }}"
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                  - type: template
                     entity: switch.arashi_s_toilet_1_do_not_disturb
                     icon: mdi:minus-circle
-                    content_info: none
-                  - type: entity
+                    icon_color: "{{ 'red' if is_state('switch.arashi_s_toilet_1_do_not_disturb', 'on') else 'grey' }}"
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                  - type: template
                     entity: switch.arashi_s_toilet_1_child_lock
                     icon: mdi:lock
-                    content_info: none
+                    icon_color: "{{ 'orange' if is_state('switch.arashi_s_toilet_1_child_lock', 'on') else 'grey' }}"
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
       - type: grid
         column_span: 1
         cards:
@@ -143,8 +173,12 @@ views:
                     icon: mdi:state-machine
                     content_info: state
                   - type: entity
-                    entity: binary_sensor.cat_feeder_1_food_level
+                    entity: binary_sensor.cat_feeder_1_feeding
                     icon: mdi:food
+                    content_info: none
+                  - type: entity
+                    entity: binary_sensor.cat_feeder_1_food_level
+                    icon: mdi:food-apple
                     content_info: none
                   - type: entity
                     entity: sensor.cat_feeder_1_battery_level
@@ -155,6 +189,48 @@ views:
                 name: Last Eating Event
                 show_state: false
                 show_name: true
+              - type: horizontal-stack
+                cards:
+                  - type: button
+                    name: 5g
+                    icon: mdi:food-drumstick
+                    tap_action:
+                      action: call-service
+                      service: text.set_value
+                      target:
+                        entity_id: text.cat_feeder_1_manual_feed
+                      data:
+                        value: "5"
+                  - type: button
+                    name: 10g
+                    icon: mdi:food-drumstick
+                    tap_action:
+                      action: call-service
+                      service: text.set_value
+                      target:
+                        entity_id: text.cat_feeder_1_manual_feed
+                      data:
+                        value: "10"
+                  - type: button
+                    name: 15g
+                    icon: mdi:food-drumstick
+                    tap_action:
+                      action: call-service
+                      service: text.set_value
+                      target:
+                        entity_id: text.cat_feeder_1_manual_feed
+                      data:
+                        value: "15"
+                  - type: button
+                    name: 20g
+                    icon: mdi:food-drumstick
+                    tap_action:
+                      action: call-service
+                      service: text.set_value
+                      target:
+                        entity_id: text.cat_feeder_1_manual_feed
+                      data:
+                        value: "20"
               - type: entities
                 entities:
                   - entity: sensor.cat_feeder_1_times_eaten
@@ -167,15 +243,43 @@ views:
                     name: Desiccant Days Left
               - type: custom:mushroom-chips-card
                 chips:
-                  - type: entity
+                  - type: template
                     entity: switch.cat_feeder_1_camera
                     icon: mdi:camera
-                    content_info: none
-                  - type: entity
+                    icon_color: "{{ 'blue' if is_state('switch.cat_feeder_1_camera', 'on') else 'grey' }}"
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                  - type: template
+                    entity: switch.cat_feeder_1_pet_tracking
+                    icon: mdi:motion-sensor
+                    icon_color: "{{ 'cyan' if is_state('switch.cat_feeder_1_pet_tracking', 'on') else 'grey' }}"
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                  - type: template
+                    entity: switch.cat_feeder_1_night_vision
+                    icon: mdi:weather-night
+                    icon_color: "{{ 'purple' if is_state('switch.cat_feeder_1_night_vision', 'on') else 'grey' }}"
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                  - type: template
                     entity: switch.cat_feeder_1_surplus_control
                     icon: mdi:bowl-mix
-                    content_info: none
-                  - type: entity
+                    icon_color: "{{ 'teal' if is_state('switch.cat_feeder_1_surplus_control', 'on') else 'grey' }}"
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
+                  - type: template
                     entity: switch.cat_feeder_1_child_lock
                     icon: mdi:lock
-                    content_info: none
+                    icon_color: "{{ 'orange' if is_state('switch.cat_feeder_1_child_lock', 'on') else 'grey' }}"
+                    tap_action:
+                      action: toggle
+                    hold_action:
+                      action: more-info
