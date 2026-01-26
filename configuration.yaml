@@ -12,3 +12,13 @@ scene: !include scenes.yaml
 
 template:
   - binary_sensor: !include binary_sensors.yaml
+
+lovelace:
+  mode: storage
+  dashboards:
+    lovelace-pets:
+      mode: yaml
+      title: Pets
+      icon: mdi:cat
+      show_in_sidebar: true
+      filename: pets.yaml

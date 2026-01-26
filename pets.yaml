@@ -1,0 +1,181 @@
+title: Pets Dashboard
+views:
+  - title: Pets
+    path: pets
+    icon: mdi:cat
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border-radius: 16px;
+                  border: 1px solid var(--divider-color);
+                  box-shadow: none;
+                  padding: 12px;
+                }
+            cards:
+              - type: heading
+                heading: Arashi
+                heading_style: title
+                icon: mdi:cat
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: entity
+                    entity: number.arashi_weight
+                    icon: mdi:scale
+                    content_info: state
+                  - type: entity
+                    entity: sensor.arashi_last_use_duration
+                    icon: mdi:timer
+                    content_info: state
+              - type: entities
+                entities:
+                  - entity: sensor.arashi_last_use_date
+                    name: Last Toilet Visit
+                  - entity: sensor.arashi_last_litter_used
+                    name: Last Litter Used
+                  - entity: sensor.arashi_last_weight_measurement
+                    name: Last Weight
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border-radius: 16px;
+                  border: 1px solid var(--divider-color);
+                  box-shadow: none;
+                  padding: 12px;
+                }
+            cards:
+              - type: heading
+                heading: Litter Box
+                heading_style: title
+                icon: mdi:toilet
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: entity
+                    entity: sensor.arashi_s_toilet_1_state
+                    icon: mdi:state-machine
+                    content_info: state
+                  - type: entity
+                    entity: sensor.arashi_s_toilet_1_litter_level
+                    icon: mdi:gauge
+                    content_info: state
+                  - type: entity
+                    entity: binary_sensor.arashi_s_toilet_1_wastebin_filled
+                    icon: mdi:trash-can
+                    content_info: none
+              - type: entities
+                entities:
+                  - entity: sensor.arashi_s_toilet_1_times_used
+                    name: Times Used Today
+                  - entity: sensor.arashi_s_toilet_1_litter_weight
+                    name: Litter Weight
+                  - entity: sensor.arashi_s_toilet_1_odor_eliminator_n50_left_days
+                    name: Odor Eliminator Days Left
+                  - entity: sensor.arashi_s_toilet_1_last_event
+                    name: Last Event
+              - type: horizontal-stack
+                cards:
+                  - type: button
+                    entity: button.arashi_s_toilet_1_scoop
+                    name: Scoop
+                    icon: mdi:shovel
+                    tap_action:
+                      action: toggle
+                  - type: button
+                    entity: button.arashi_s_toilet_1_level_litter
+                    name: Level
+                    icon: mdi:flatten
+                    tap_action:
+                      action: toggle
+                  - type: button
+                    entity: button.arashi_s_toilet_1_dump_litter
+                    name: Dump
+                    icon: mdi:delete-empty
+                    tap_action:
+                      action: toggle
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: entity
+                    entity: switch.arashi_s_toilet_1_auto_clean
+                    icon: mdi:refresh-auto
+                    content_info: none
+                  - type: entity
+                    entity: switch.arashi_s_toilet_1_do_not_disturb
+                    icon: mdi:minus-circle
+                    content_info: none
+                  - type: entity
+                    entity: switch.arashi_s_toilet_1_child_lock
+                    icon: mdi:lock
+                    content_info: none
+      - type: grid
+        column_span: 1
+        cards:
+          - type: custom:stack-in-card
+            mode: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  border-radius: 16px;
+                  border: 1px solid var(--divider-color);
+                  box-shadow: none;
+                  padding: 12px;
+                }
+            cards:
+              - type: heading
+                heading: Feeder
+                heading_style: title
+                icon: mdi:food-drumstick
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: entity
+                    entity: sensor.cat_feeder_1_device_status
+                    icon: mdi:state-machine
+                    content_info: state
+                  - type: entity
+                    entity: binary_sensor.cat_feeder_1_food_level
+                    icon: mdi:food
+                    content_info: none
+                  - type: entity
+                    entity: sensor.cat_feeder_1_battery_level
+                    icon: mdi:battery
+                    content_info: state
+              - type: picture-entity
+                entity: image.cat_feeder_1_last_eat_event
+                name: Last Eating Event
+                show_state: false
+                show_name: true
+              - type: entities
+                entities:
+                  - entity: sensor.cat_feeder_1_times_eaten
+                    name: Times Eaten Today
+                  - entity: sensor.cat_feeder_1_total_dispensed
+                    name: Total Dispensed
+                  - entity: sensor.cat_feeder_1_food_bowl_fill
+                    name: Bowl Fill Level
+                  - entity: sensor.cat_feeder_1_desiccant_left_days
+                    name: Desiccant Days Left
+              - type: custom:mushroom-chips-card
+                chips:
+                  - type: entity
+                    entity: switch.cat_feeder_1_camera
+                    icon: mdi:camera
+                    content_info: none
+                  - type: entity
+                    entity: switch.cat_feeder_1_surplus_control
+                    icon: mdi:bowl-mix
+                    content_info: none
+                  - type: entity
+                    entity: switch.cat_feeder_1_child_lock
+                    icon: mdi:lock
+                    content_info: none
