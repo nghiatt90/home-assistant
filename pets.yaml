@@ -189,6 +189,11 @@ views:
                 name: Last Eating Event
                 show_state: false
                 show_name: true
+              - type: picture-entity
+                entity: image.cat_feeder_1_dish_after
+                name: Bowl (After Feeding)
+                show_state: false
+                show_name: true
               - type: horizontal-stack
                 cards:
                   - type: button
@@ -237,8 +242,6 @@ views:
                     name: Times Eaten Today
                   - entity: sensor.cat_feeder_1_total_dispensed
                     name: Total Dispensed
-                  - entity: sensor.cat_feeder_1_food_bowl_fill
-                    name: Bowl Fill Level
                   - entity: sensor.cat_feeder_1_desiccant_left_days
                     name: Desiccant Days Left
               - type: custom:mushroom-chips-card
