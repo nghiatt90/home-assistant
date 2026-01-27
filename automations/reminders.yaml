@@ -1,0 +1,86 @@
+# =============================================================================
+# Reminders and Notifications
+# =============================================================================
+
+- id: '1767172045024'
+  alias: "Reminder: Calendar Event"
+  description: Play a reminder sound 5 minutes before any family calendar event
+  triggers:
+  - entity_id: calendar.family
+    event: start
+    offset: -00:05:00
+    trigger: calendar
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: person.yoshi
+      state:
+      - home
+    - condition: state
+      entity_id: person.queen
+      state:
+      - home
+  actions:
+  - action: tts.cloud_say
+    metadata: {}
+    data:
+      cache: true
+      entity_id: media_player.all_speakers
+      message: It's almost time for {{ trigger.calendar_event.summary }}
+  mode: single
+
+- id: '1767182652954'
+  alias: "Reminder: Bedtime"
+  description: Play bedtime reminder with optional phone charging warnings
+  triggers:
+  - trigger: time
+    at: '22:25:00'
+  conditions: []
+  actions:
+  - variables:
+      core_message: It's almost time to sleep.
+      yoshi_should_charge: '{{ states(''binary_sensor.yoshi_should_charge_50'')|bool
+        }}'
+      queen_should_charge: '{{ states(''binary_sensor.queen_should_charge_50'')|bool
+        }}'
+      battery_warnings: "{% if yoshi_should_charge and queen_should_charge %}\n  Yoshi
+        and QP, you should charge your phones.\n{% elif yoshi_should_charge %}\n  Yoshi,
+        you should charge your phone\n{% elif queen_should_charge %}\n  QP, you should
+        charge your phone\n{% else %}\n  \"\"\n{% endif %}"
+      final_message: '{{ (core_message + '' '' + battery_warnings).strip() }}'
+  - action: tts.speak
+    metadata: {}
+    target:
+      entity_id: tts.home_assistant_cloud
+    data:
+      cache: true
+      media_player_entity_id: media_player.all_speakers
+      message: '{{ final_message }}'
+  mode: single
+
+- id: '1767232822685'
+  alias: "Reminder: Phone Charge"
+  description: Remind family to charge their phone during the day
+  triggers:
+  - trigger: time_pattern
+    hours: '*'
+  conditions:
+  - condition: and
+    conditions:
+    - condition: time
+      after: 09:00:00
+      before: '22:00:00'
+    - condition: state
+      entity_id: binary_sensor.someone_should_charge_25
+      state:
+      - 'on'
+  actions:
+  - action: tts.cloud_say
+    metadata: {}
+    data:
+      cache: false
+      entity_id: media_player.all_speakers
+      message: '{{ state_attr(''binary_sensor.someone_should_charge_25'', ''message'')
+        }}'
+  mode: single

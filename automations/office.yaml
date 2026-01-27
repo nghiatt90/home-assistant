@@ -1,0 +1,98 @@
+# =============================================================================
+# Office Presence Automations
+# =============================================================================
+
+- id: office1_light_on_presence
+  alias: "Office: Light On When Presence Detected"
+  description: Turn on the office light when presence is detected and it's dark
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.office_1_presence_sensor_occupancy
+    to: 'on'
+  - trigger: state
+    entity_id: sensor.office_1_presence_sensor_illumination
+    to: dim
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.office_1_presence_sensor_occupancy
+    state: 'on'
+  - condition: state
+    entity_id: sensor.office_1_presence_sensor_illumination
+    state: dim
+  - condition: state
+    entity_id: light.office_light_1
+    state: 'off'
+  actions:
+  - action: light.turn_on
+    target:
+      entity_id: light.office_light_1
+  mode: single
+
+- id: office1_ac_heating_on_presence
+  alias: "Office: AC Heating When Cold"
+  description: Turn on AC in heating mode when presence detected and temperature is
+    below minimum comfortable
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.office_1_presence_sensor_occupancy
+    to: 'on'
+  conditions:
+  - condition: template
+    value_template: "{{ states('sensor.office_1_climate_sensor_temperature') | float
+      <\n   states('number.office_1_climate_sensor_comfort_temperature_min') | float
+      }}"
+  - condition: state
+    entity_id: climate.office_ac_1
+    state:
+    - 'off'
+  actions:
+  - action: climate.set_hvac_mode
+    target:
+      entity_id: climate.office_ac_1
+    data:
+      hvac_mode: heat
+  mode: single
+
+- id: office1_ac_cooling_on_presence
+  alias: "Office: AC Cooling When Hot"
+  description: Turn on AC in cooling mode when presence detected and temperature is
+    above maximum comfortable
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.office_1_presence_sensor_occupancy
+    to: 'on'
+  conditions:
+  - condition: template
+    value_template: "{{ states('sensor.office_1_climate_sensor_temperature') | float
+      >\n   states('number.office_1_climate_sensor_comfort_temperature_max') | float
+      }}"
+  - condition: state
+    entity_id: climate.office_ac_1
+    state:
+    - 'off'
+  actions:
+  - action: climate.set_hvac_mode
+    target:
+      entity_id: climate.office_ac_1
+    data:
+      hvac_mode: cool
+  mode: single
+
+- id: office1_turn_off_no_presence
+  alias: "Office: Turn Off After No Presence"
+  description: Turn off light and AC when no presence detected for 15 minutes
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.office_1_presence_sensor_occupancy
+    to:
+    - 'off'
+  conditions: []
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id: light.office_light_1
+  - action: climate.turn_off
+    target:
+      entity_id: climate.office_ac_1
+  mode: single

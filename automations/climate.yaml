@@ -1,0 +1,73 @@
+# =============================================================================
+# Climate Control Automations
+# =============================================================================
+
+- id: ac_auto_climate_mode
+  alias: "Climate: AC Auto Mode Based on Temperature"
+  description: When an AC is turned on (from off or unknown), automatically set heat
+    mode if cold or cool mode if hot based on room comfort settings
+  triggers:
+  - trigger: state
+    entity_id:
+    - climate.office_ac_1
+    - climate.office_ac_2
+    - climate.main_ac
+    - climate.main_ac_2
+    - climate.bedroom_ac
+    - climate.guest_bedroom_ac
+    from:
+    - 'off'
+    - unknown
+  conditions: []
+  actions:
+  - variables:
+      ac_to_sensor:
+        climate.office_ac_1:
+          temp: sensor.office_1_climate_sensor_temperature
+          comfort_min: number.office_1_climate_sensor_comfort_temperature_min
+          comfort_max: number.office_1_climate_sensor_comfort_temperature_max
+        climate.office_ac_2:
+          temp: sensor.office_2_climate_sensor_temperature
+          comfort_min: number.office_2_climate_sensor_comfort_temperature_min
+          comfort_max: number.office_2_climate_sensor_comfort_temperature_max
+        climate.main_ac:
+          temp: sensor.living_room_climate_sensor_temperature
+          comfort_min: number.living_room_climate_sensor_comfort_temperature_min
+          comfort_max: number.living_room_climate_sensor_comfort_temperature_max
+        climate.main_ac_2:
+          temp: sensor.living_room_climate_sensor_temperature
+          comfort_min: number.living_room_climate_sensor_comfort_temperature_min
+          comfort_max: number.living_room_climate_sensor_comfort_temperature_max
+        climate.bedroom_ac:
+          temp: sensor.bedroom_climate_sensor_temperature
+          comfort_min: number.bedroom_climate_sensor_comfort_temperature_min
+          comfort_max: number.bedroom_climate_sensor_comfort_temperature_max
+        climate.guest_bedroom_ac:
+          temp: sensor.guest_bedroom_climate_sensor_temperature
+          comfort_min: number.guest_bedroom_climate_sensor_comfort_temperature_min
+          comfort_max: number.guest_bedroom_climate_sensor_comfort_temperature_max
+      sensors: '{{ ac_to_sensor.get(trigger.entity_id, {}) }}'
+      current_temp: '{{ states(sensors.temp) | float if sensors else 0 }}'
+      comfort_min: '{{ states(sensors.comfort_min) | float if sensors else 0 }}'
+      comfort_max: '{{ states(sensors.comfort_max) | float if sensors else 0 }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ sensors and current_temp < comfort_min }}'
+      sequence:
+      - action: climate.set_hvac_mode
+        target:
+          entity_id: '{{ trigger.entity_id }}'
+        data:
+          hvac_mode: heat
+    - conditions:
+      - condition: template
+        value_template: '{{ sensors and current_temp > comfort_max }}'
+      sequence:
+      - action: climate.set_hvac_mode
+        target:
+          entity_id: '{{ trigger.entity_id }}'
+        data:
+          hvac_mode: cool
+  mode: parallel
+  max: 6

@@ -1,0 +1,298 @@
+# =============================================================================
+# PetKit Maintenance Alerts
+# =============================================================================
+
+- id: petkit_wastebin_full
+  alias: "PetKit: Litter Box Wastebin Full"
+  description: Alert when the litter box wastebin is full and needs emptying
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.arashi_s_toilet_1_wastebin_filled
+      to: "on"
+  conditions: []
+  actions:
+    - action: notify.mobile_app_yoshi_s_a51
+      data:
+        title: "Litter Box Maintenance"
+        message: "Arashi's litter box wastebin is full. Time to empty it!"
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_wastebin
+    - action: notify.mobile_app_queen_s_phone
+      data:
+        title: "Litter Box Maintenance"
+        message: "Arashi's litter box wastebin is full. Time to empty it!"
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_wastebin
+    - action: persistent_notification.create
+      data:
+        title: "Litter Box Maintenance"
+        message: "Arashi's litter box wastebin is full. Time to empty it!"
+        notification_id: petkit_wastebin
+  mode: single
+
+- id: petkit_litter_low
+  alias: "PetKit: Litter Running Low"
+  description: Alert when litter is running low
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.arashi_s_toilet_1_sand_lack
+      to: "on"
+  conditions: []
+  actions:
+    - action: notify.mobile_app_yoshi_s_a51
+      data:
+        title: "Litter Box Maintenance"
+        message: "Litter is running low. Please refill soon."
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_litter_low
+    - action: notify.mobile_app_queen_s_phone
+      data:
+        title: "Litter Box Maintenance"
+        message: "Litter is running low. Please refill soon."
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_litter_low
+    - action: persistent_notification.create
+      data:
+        title: "Litter Box Maintenance"
+        message: "Litter is running low. Please refill soon."
+        notification_id: petkit_litter_low
+  mode: single
+
+- id: petkit_food_empty
+  alias: "PetKit: Food Hopper Empty"
+  description: Alert when the feeder food hopper is empty
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.cat_feeder_1_food_level
+      to: "on"
+  conditions: []
+  actions:
+    - action: notify.mobile_app_yoshi_s_a51
+      data:
+        title: "Feeder Maintenance"
+        message: "Cat feeder is running low on food. Please refill!"
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_food_empty
+    - action: notify.mobile_app_queen_s_phone
+      data:
+        title: "Feeder Maintenance"
+        message: "Cat feeder is running low on food. Please refill!"
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_food_empty
+    - action: persistent_notification.create
+      data:
+        title: "Feeder Maintenance"
+        message: "Cat feeder is running low on food. Please refill!"
+        notification_id: petkit_food_empty
+  mode: single
+
+- id: petkit_desiccant_expiring
+  alias: "PetKit: Desiccant Needs Replacement"
+  description: Alert when feeder desiccant is expiring soon
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.cat_feeder_1_desiccant_left_days
+      below: 3
+  conditions: []
+  actions:
+    - action: notify.mobile_app_yoshi_s_a51
+      data:
+        title: "Feeder Maintenance"
+        message: "Feeder desiccant expires in {{ states('sensor.cat_feeder_1_desiccant_left_days') }} days. Replace soon."
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_desiccant
+    - action: notify.mobile_app_queen_s_phone
+      data:
+        title: "Feeder Maintenance"
+        message: "Feeder desiccant expires in {{ states('sensor.cat_feeder_1_desiccant_left_days') }} days. Replace soon."
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_desiccant
+    - action: persistent_notification.create
+      data:
+        title: "Feeder Maintenance"
+        message: "Feeder desiccant expires in {{ states('sensor.cat_feeder_1_desiccant_left_days') }} days. Replace soon."
+        notification_id: petkit_desiccant
+  mode: single
+
+- id: petkit_odor_eliminator_expiring
+  alias: "PetKit: Odor Eliminator Needs Replacement"
+  description: Alert when litter box N50 odor eliminator is expiring soon
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.arashi_s_toilet_1_odor_eliminator_n50_left_days
+      below: 3
+  conditions: []
+  actions:
+    - action: notify.mobile_app_yoshi_s_a51
+      data:
+        title: "Litter Box Maintenance"
+        message: "Odor eliminator expires in {{ states('sensor.arashi_s_toilet_1_odor_eliminator_n50_left_days') }} days. Replace soon."
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_odor_eliminator
+    - action: notify.mobile_app_queen_s_phone
+      data:
+        title: "Litter Box Maintenance"
+        message: "Odor eliminator expires in {{ states('sensor.arashi_s_toilet_1_odor_eliminator_n50_left_days') }} days. Replace soon."
+        data:
+          notification_icon: mdi:tools
+          tag: petkit_odor_eliminator
+    - action: persistent_notification.create
+      data:
+        title: "Litter Box Maintenance"
+        message: "Odor eliminator expires in {{ states('sensor.arashi_s_toilet_1_odor_eliminator_n50_left_days') }} days. Replace soon."
+        notification_id: petkit_odor_eliminator
+  mode: single
+
+# =============================================================================
+# PetKit Health Monitoring
+# =============================================================================
+
+- id: petkit_no_bathroom_visit
+  alias: "PetKit: No Bathroom Visit Alert"
+  description: Alert if Arashi hasn't used the litter box in 18+ hours
+  triggers:
+    - trigger: state
+      entity_id: sensor.arashi_s_toilet_1_times_used
+      to: "0"
+      for:
+        hours: 18
+  conditions: []
+  actions:
+    - action: notify.mobile_app_yoshi_s_a51
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi hasn't used the litter box in 18+ hours. This could indicate a health issue."
+        data:
+          notification_icon: mdi:heart-pulse
+          tag: petkit_health_no_bathroom
+          importance: high
+    - action: notify.mobile_app_queen_s_phone
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi hasn't used the litter box in 18+ hours. This could indicate a health issue."
+        data:
+          notification_icon: mdi:heart-pulse
+          tag: petkit_health_no_bathroom
+          importance: high
+    - action: persistent_notification.create
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi hasn't used the litter box in 18+ hours. This could indicate a health issue."
+        notification_id: petkit_health_no_bathroom
+  mode: single
+
+- id: petkit_excessive_bathroom
+  alias: "PetKit: Excessive Bathroom Use Alert"
+  description: Alert if Arashi uses the litter box more than 6 times in a day
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.arashi_s_toilet_1_times_used
+      above: 6
+  conditions: []
+  actions:
+    - action: notify.mobile_app_yoshi_s_a51
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi has used the litter box {{ states('sensor.arashi_s_toilet_1_times_used') }} times today. Excessive use may indicate digestive issues."
+        data:
+          notification_icon: mdi:heart-pulse
+          tag: petkit_health_excessive
+          importance: high
+    - action: notify.mobile_app_queen_s_phone
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi has used the litter box {{ states('sensor.arashi_s_toilet_1_times_used') }} times today. Excessive use may indicate digestive issues."
+        data:
+          notification_icon: mdi:heart-pulse
+          tag: petkit_health_excessive
+          importance: high
+    - action: persistent_notification.create
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi has used the litter box {{ states('sensor.arashi_s_toilet_1_times_used') }} times today. Excessive use may indicate digestive issues."
+        notification_id: petkit_health_excessive
+  mode: single
+
+- id: petkit_weight_change
+  alias: "PetKit: Significant Weight Change Alert"
+  description: Alert if Arashi's weight changes by more than 0.3kg
+  triggers:
+    - trigger: state
+      entity_id: number.arashi_weight
+  conditions:
+    - condition: template
+      value_template: >
+        {% set old = trigger.from_state.state | float(0) %}
+        {% set new = trigger.to_state.state | float(0) %}
+        {{ old > 0 and new > 0 and (new - old) | abs > 0.3 }}
+  actions:
+    - variables:
+        old_weight: "{{ trigger.from_state.state | float }}"
+        new_weight: "{{ trigger.to_state.state | float }}"
+        change: "{{ (new_weight - old_weight) | round(2) }}"
+        direction: "{{ 'gained' if change > 0 else 'lost' }}"
+    - action: notify.mobile_app_yoshi_s_a51
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi has {{ direction }} {{ change | abs }}kg (now {{ new_weight }}kg). Sudden weight changes may need attention."
+        data:
+          notification_icon: mdi:heart-pulse
+          tag: petkit_health_weight
+          importance: high
+    - action: notify.mobile_app_queen_s_phone
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi has {{ direction }} {{ change | abs }}kg (now {{ new_weight }}kg). Sudden weight changes may need attention."
+        data:
+          notification_icon: mdi:heart-pulse
+          tag: petkit_health_weight
+          importance: high
+    - action: persistent_notification.create
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi has {{ direction }} {{ change | abs }}kg (now {{ new_weight }}kg). Sudden weight changes may need attention."
+        notification_id: petkit_health_weight
+  mode: single
+
+- id: petkit_not_eating
+  alias: "PetKit: Not Eating Alert"
+  description: Alert if Arashi hasn't eaten in 12+ hours
+  triggers:
+    - trigger: state
+      entity_id: sensor.cat_feeder_1_times_eaten
+      to: "0"
+      for:
+        hours: 12
+  conditions: []
+  actions:
+    - action: notify.mobile_app_yoshi_s_a51
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi hasn't eaten in 12+ hours. Loss of appetite may indicate illness."
+        data:
+          notification_icon: mdi:heart-pulse
+          tag: petkit_health_not_eating
+          importance: high
+    - action: notify.mobile_app_queen_s_phone
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi hasn't eaten in 12+ hours. Loss of appetite may indicate illness."
+        data:
+          notification_icon: mdi:heart-pulse
+          tag: petkit_health_not_eating
+          importance: high
+    - action: persistent_notification.create
+      data:
+        title: "Pet Health Alert"
+        message: "Arashi hasn't eaten in 12+ hours. Loss of appetite may indicate illness."
+        notification_id: petkit_health_not_eating
+  mode: single

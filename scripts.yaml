@@ -1,0 +1,13 @@
+wake_tv:
+  alias: "Wake TV"
+  description: "Wake up the LG TV from standby using Wake-on-LAN, then turn it on"
+  icon: mdi:television
+  sequence:
+    - action: button.press
+      target:
+        entity_id: button.tv_wol
+    - delay:
+        seconds: 5
+    - action: media_player.turn_on
+      target:
+        entity_id: media_player.tv
